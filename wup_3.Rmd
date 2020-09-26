@@ -1,6 +1,6 @@
 ---
 title: "Alcohol vs Seat choice"
-author: "Your Name"
+author: "Adesuwa Mukoro"
 date: "Fall 2020"
 output: html_document
 ---
@@ -12,10 +12,14 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r include=FALSE}
 require(tidyverse)
 require(tigerstats)
+require(knitr)
 davisdata <- read.csv(file="UCDavis.csv")
 ```
 ## Our Goal is to answer this question Is there a difference between the alcohol consumed between the row
 ## you choose to sit in??
+
+$H_0$: null hypothesis is that  there is no difference in the average alcohol consumption based on where you sit   
+$H_A$: the alternative hypothesis is that there is a difference in average alcohol consumption based on where you sit   
 
 ## Now with ggplot - first select the basic data
 
@@ -36,9 +40,20 @@ basicCN + geom_boxplot(notch=TRUE,outlier.color = "red") + stat_boxplot(geom ='e
 ```
 
 ## Numerical Summarys 
-
+```{r}
+favstats(alcohol~Seat,data=davisdata)
+```
 ## Inferential Tests
+```{r}
+model1 <- aov(alcohol~Seat,data=davisdata)
+summary.aov(model1)
+```
+the p-value is 0.000116 < 0.05, so we reject the null hypothesis and conclude there is a difference in the average alcohol consumption between at least one pair of the seat combinations
+
+```{r}
+plot(TukeyHSD(model1))
+```
 
 ## Conclusions
-
-
+there is a difference in the average alcohol consumption based on the seat you choose to sit
+The difference shows that alcohol was mostly consumed by the people seating in the back rows making the front to back and the middle to back rows change more than the front to middle 
